@@ -240,6 +240,8 @@ M.setup = function(command_table, opts)
           end
           cache[cached_dir] = nil
           log(cmd_str .. " stopped", "INFO")
+        else
+          log(cmd_str .. " not running", "WARN")
         end
       end
     end
