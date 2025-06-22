@@ -1,5 +1,7 @@
 # npm-runner.nvim
 
+![home!](img.png)
+
 - npm-runner.nvim is an configuration for run npm, pnpm yarn bun ect
 
 # Instalation
