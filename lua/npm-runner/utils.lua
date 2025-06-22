@@ -243,6 +243,8 @@ M.setup = function(command_table, opts)
         else
           log(cmd_str .. " not running", "WARN")
         end
+      else
+        log(cmd_str .. " not running", "WARN")
       end
     end
 
