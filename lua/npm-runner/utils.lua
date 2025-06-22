@@ -152,6 +152,19 @@ M.setup = function(command_table, opts)
     end, { desc = "Hide last NPM modal output" })
   end
 
+  -- Tambah user command global untuk show/hide modal
+  vim.api.nvim_create_user_command("NpmModalShow", function()
+    if last_modal then
+      last_modal.show()
+    end
+  end, { desc = "Show last NPM modal output" })
+
+  vim.api.nvim_create_user_command("NpmModalHide", function()
+    if last_modal then
+      last_modal.hide()
+    end
+  end, { desc = "Hide last NPM modal output" })
+
   for key, conf in pairs(command_table) do
     local start_cmd = conf.start or ("NpmRun" .. key)
     local stop_cmd = conf.stop or ("NpmStop" .. key)
