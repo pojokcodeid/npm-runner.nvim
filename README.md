@@ -52,6 +52,8 @@ Default User Command :
 - :NpmStopDev
 - :NpmRun
 - :NpmStop
+- :NpmModalShow
+- :NpmModalHide
 
 default opts :
 
