@@ -100,12 +100,12 @@ local M = {}
 M._last_modal = nil
 
 local function log(message, level)
-  vim.notify(string.format("npm-dev-runner: %s", message), vim.log.levels[level])
+  vim.notify(string.format("dev-runner: %s", message), vim.log.levels[level])
 end
 
 local function find_cached_dir(dir, cache)
   if not dir then
-    vim.notify("npm-dev-runner: No directory provided to find_cached_dir()", vim.log.levels.ERROR)
+    vim.notify("dev-runner: No directory provided to find_cached_dir()", vim.log.levels.ERROR)
     return
   end
   local cur = dir
