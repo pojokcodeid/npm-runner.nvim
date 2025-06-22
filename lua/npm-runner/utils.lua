@@ -6,6 +6,7 @@ local function modal_manager(opts)
   local buf_id = nil
   local last_content = ""
   local is_shown = false
+  local ever_shown = false
 
   local function close()
     if win_id and vim.api.nvim_win_is_valid(win_id) then
@@ -31,7 +32,6 @@ local function modal_manager(opts)
         end,
       })
     end
-    -- Pastikan buffer modifiable sebelum update, abaikan jika error (buffer deleted)
     pcall(vim.api.nvim_buf_set_option, buf_id, "modifiable", true)
     pcall(vim.api.nvim_buf_set_lines, buf_id, 0, -1, false, lines)
     pcall(vim.api.nvim_buf_set_option, buf_id, "modifiable", false)
@@ -47,6 +47,7 @@ local function modal_manager(opts)
       })
     end
     is_shown = true
+    ever_shown = true
   end
 
   local function show()
@@ -72,13 +73,15 @@ local function modal_manager(opts)
     end
   end
 
+  -- Hanya auto open saat pertama kali, tidak auto open setelah pernah di-close/hide
   local function set_content(content)
     last_content = content
-    if is_shown then
-      update(content)
-    else
+    if not ever_shown then
       open(content)
+    elseif is_shown then
+      update(content)
     end
+    -- jika ever_shown dan !is_shown, cukup simpan output saja
   end
 
   return {
@@ -97,12 +100,12 @@ local M = {}
 M._last_modal = nil
 
 local function log(message, level)
-  vim.notify(string.format("npm-runner: %s", message), vim.log.levels[level])
+  vim.notify(string.format("npm-dev-runner: %s", message), vim.log.levels[level])
 end
 
 local function find_cached_dir(dir, cache)
   if not dir then
-    vim.notify("npm-runner: No directory provided to find_cached_dir()", vim.log.levels.ERROR)
+    vim.notify("npm-dev-runner: No directory provided to find_cached_dir()", vim.log.levels.ERROR)
     return
   end
   local cur = dir
@@ -225,8 +228,6 @@ M.setup = function(command_table, opts)
           cache[cached_dir] = nil
           log(cmd_str .. " stopped", "INFO")
         end
-      else
-        log(cmd_str .. " not running", "INFO")
       end
     end
 
@@ -235,12 +236,12 @@ M.setup = function(command_table, opts)
       return vim.fn.expand(vim.fn.fnamemodify(vim.fn.expand(dir), ":p"))
     end
 
-    vim.api.nvim_create_user_command(start_cmd, function(opt)
-      do_start(find_dir(opt.args))
+    vim.api.nvim_create_user_command(start_cmd, function(opts)
+      do_start(find_dir(opts.args))
     end, { nargs = "?" })
 
-    vim.api.nvim_create_user_command(stop_cmd, function(opt)
-      do_stop(find_dir(opt.args))
+    vim.api.nvim_create_user_command(stop_cmd, function(opts)
+      do_stop(find_dir(opts.args))
     end, { nargs = "?" })
   end
 end
