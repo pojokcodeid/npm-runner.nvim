@@ -21,6 +21,8 @@ M.setup = function(command, opts)
       height = 20,
     }
   require("npm-runner.utils").setup(command, opts)
+  require("npm-runner.javascript")
+  require("npm-runner.typescript")
 end
 
 return M
